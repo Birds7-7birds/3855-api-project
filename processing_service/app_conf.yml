@@ -1,0 +1,11 @@
+version: 1
+datastore:
+  filename: stats.sqlite
+scheduler:
+  period_sec: 5
+  getBids:
+    url: http://localhost:8090/getbids
+  getItems:
+    url: http://localhost:8090/getItems
+eventstore:
+  url: http://localhost:8090

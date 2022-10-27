@@ -1,0 +1,9 @@
+version: 1
+BID_URL:
+  url: http://localhost:8090/bid
+AUCTION_URL:
+  url: http://localhost:8090/listItem
+events:
+  hostname: <Your VM’s Hostname>
+  port: 9092
+  topic: events

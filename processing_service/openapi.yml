@@ -1,0 +1,56 @@
+openapi: 3.0.0
+info:
+  description: This API provides event stats
+  version: "1.0.0"
+  title: Stats API
+  contact:
+    email: no@email.given
+paths:
+  /stats:
+    get:
+      summary: Gets the event stats
+      operationId: app.get_stats
+      description: Gets auction statistics
+      responses:
+        '200':
+          description: Successfully returned a list of aution events
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/ReadingStats'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    ReadingStats:
+      required:
+      - num_bids
+      - max_bid
+      - num_items_listed
+      - max_instabuy_price
+      properties:
+        num_bp_readings:
+          type: integer
+          example: 500000
+        max_bp_sys_reading:
+          type: integer
+          example: 200
+        max_bp_dia_reading:
+          type: integer
+          example: 180
+        num_hr_readings:
+          type: integer
+          example: 500000
+        max_hr_reading:
+          type: integer
+          example: 250
+      type: object

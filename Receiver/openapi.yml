@@ -1,0 +1,125 @@
+openapi: 3.0.0
+servers: 
+  - description: address to be used
+    url: 'http://localhost:8080'
+info:
+  description: This is a simple API for auctions
+  version: "1.0.0"
+  title: Simple Inventory API
+  contact:
+    email: real@email.com
+tags:
+  - name: seller
+    description: this is a seller
+  - name: buyer
+    description: this is a buyer
+paths:
+  /listItem:
+    post:
+      tags: 
+        - seller
+      summary: adds an auctions item
+      operationId: app.postAuction
+      description: Adds an auctions item to the system
+      responses:
+        '201':
+          description: 'item listed'
+        '400':
+          description: 'invalid input, object invalid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postAuctionItem'
+        description: Inventory item to add
+  /bid:
+    post:
+      tags:
+        - buyer
+      summary: bid on an aution item
+      operationId: app.bidAuction
+      description: bid on an aution item in system
+      responses:
+        '201':
+          description: 'bid on item'
+        '400':
+          description: 'invalid input, object invalid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bidAuctionItem'
+        description: 'bid on auction item'
+    
+components:
+  schemas:
+    postAuctionItem:
+      type: object
+      required:
+        - itemID
+        - sellerID
+        - description
+        - maxCount
+        - minPrice
+        - instaBuyPrice
+        - closingTime
+      properties:
+        traceId:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        itemID:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        sellerID:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        description:
+          type: string
+          example: its a fresh liver trust me not a scam
+        maxCount:
+          type: integer
+        minPrice:
+          type: integer
+        instaBuyPrice:
+          type: integer
+        closingTime:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+    bidAuctionItem:
+      type: object
+      required:
+        - itemID
+        - bidderID
+        - bidID
+        - bidCount
+        - bidPrice
+        - bidTime
+      properties:
+        traceId:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        itemID:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        bidderID:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        bidID:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        bidCount:
+          type: integer
+        bidPrice:
+          type: integer
+        bidTime:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
