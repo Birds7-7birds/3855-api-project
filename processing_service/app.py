@@ -13,16 +13,16 @@ import datetime
 import uuid
 from sqlalchemy import func
 
+app = connexion.FlaskApp(__name__, specification_dir='')
+app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
+logger = logging.getLogger('basicLogger')
+
 with open('.\Api project\processing_service/app_conf.yml', 'r') as f:
     app_config = yaml.safe_load(f.read())
 
 with open('.\Api project\processing_service/log_conf.yml', 'r') as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
-
-# DB_ENGINE = create_engine(f'mysql+pymysql://{app_config["datastore"]["user"]}:{app_config["datastore"]["password"]}@{app_config["datastore"]["hostname"]}:{app_config["datastore"]["port"]}/{app_config["datastore"]["db"]}')
-# Base.metadata.bind = DB_ENGINE
-# DB_SESSION = sessionmaker(bind=DB_ENGINE)
 
 DB_ENGINE = create_engine("sqlite:///%s" %app_config["datastore"]["filename"])
 Base.metadata.bind = DB_ENGINE
@@ -34,47 +34,6 @@ def init_scheduler():
                     'interval',
                     seconds=app_config['scheduler']['period_sec'])
     sched.start()
-
-# def get_stats(body):
-#     """ Receives a auction post reading """
-#     trace = body['traceId']
-#     logging.debug("Received event postAuction request with a trace id of " + trace)
-
-#     session = DB_SESSION()
-#     listeditem =    postAuctionClass(body['itemID'],
-#                 body['traceId'],
-#                 body['sellerID'],
-#                 body['closingTime'],
-#                 body['maxCount'],
-#                 body['minPrice'],
-#                 body['instaBuyPrice'],
-#                 body['description'])
-
-#     session.add(listeditem)
-
-#     session.commit()
-#     session.close()
-#     logger.debug('Received postAuction event (Id: ' + trace + ')')
-
-
-#     return NoContent, 201
-
-
-
-# def get_stats(timestamp):
-#     """ Gets bids after the timestamp """
-#     session = DB_SESSION()
-#     timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
-#     readings = session.query(bidAuctionClass).filter(bidAuctionClass.date_created >= timestamp_datetime)
-#     results = session.query(Stats).order_by(Stats.last_updated.desc())
-#     results_list = []
-#     for reading in readings:
-#         results_list.append(reading.to_dict())
-#     session.close()
-
-#     logger.info("Query for new bids after %s returns %d results" %
-#         (timestamp, len(results_list)))
-#     return results_list, 200
 
 def populate_stats():
     trace = str(uuid.uuid4())
@@ -185,11 +144,6 @@ def get_stats():
 
     return result, 200
 
-
-
-app = connexion.FlaskApp(__name__, specification_dir='')
-app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
-logger = logging.getLogger('basicLogger')
 
 if __name__ == "__main__":
 # run our standalone gevent server

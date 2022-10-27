@@ -14,7 +14,11 @@ from pykafka import KafkaClient
 from pykafka.common import OffsetType
 from threading import Thread 
 
-with open('.\Api project\storage/app_conf.yml', 'r') as f:
+app = connexion.FlaskApp(__name__, specification_dir='')
+app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
+logger = logging.getLogger('basicLogger')
+
+with open('.\Api project\storage/app_conf_remote.yml', 'r') as f:
     app_config = yaml.safe_load(f.read())
 
 with open('.\Api project\storage/log_conf.yml', 'r') as f:
@@ -120,30 +124,21 @@ def process_messages():
     app_config["events"]["port"])
     client = KafkaClient(hosts=hostname)
     topic = client.topics[str.encode(app_config["events"]["topic"])]
-    # Create a consume on a consumer group, that only reads new messages
-    # (uncommitted messages) when the service re-starts (i.e., it doesn't
-    # read all the old messages from the history in the message queue).
     consumer = topic.get_simple_consumer(consumer_group=b'event_group',
                                             reset_offset_on_start=False,
                                             auto_offset_reset=OffsetType.LATEST)
-    # This is blocking - it will wait for a new message
     for msg in consumer:
         msg_str = msg.value.decode('utf-8')
         msg = json.loads(msg_str)
         logger.info("Message: %s" % msg)
         payload = msg["payload"]
         if msg["type"] == "event1": # Change this to your event type
-        # Store the event1 (i.e., the payload) to the DB
-        elif msg["type"] == "event2": # Change this to your event type
-        # Store the event2 (i.e., the payload) to the DB
-        # Commit the new message as being read
+            postAuction(payload)
+            logger.info(f'posting to ${msg} storage')
+        elif msg["type"] == "bidAuction": # Change this to your event type
+            bidAuction(payload)
+            logger.info(f'posting to ${msg} storage')
         consumer.commit_offsets()
-
-
-
-app = connexion.FlaskApp(__name__, specification_dir='')
-app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
-logger = logging.getLogger('basicLogger')
 
 if __name__ == "__main__":
     t1 = Thread(target=process_messages)
