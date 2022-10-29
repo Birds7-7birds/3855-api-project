@@ -1,0 +1,11 @@
+version: 1
+datastore:
+  user: "roots"
+  password: NewPassword
+  hostname: ec2-34-219-221-192.us-west-2.compute.amazonaws.com
+  port: 3306
+  db: "auctiondb"
+events:
+  hostname: ${VAR:HOSTNAME}
+  port: 9092
+  topic: events

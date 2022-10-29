@@ -1,0 +1,73 @@
+version: '3'
+services:
+  db:
+    build: ./database/
+    restart: always
+    volumes:
+      - statefulDBVideos:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+    ports:
+      - $MYSQL_PORT:$MYSQL_PORT
+  upload:
+    depends_on:
+      - db
+      - filesystem
+    build: ./upload/
+    ports:
+      - "5000:5000"
+    environment:
+      MYSQL_HOSTNAME: db
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      FILE_SYSTEM_HOSTNAME: filesystem
+      AUTH_HOSTNAME: auth
+      FILE_SYSTEM_PORT: $FILESYSTEM_PORT
+      AUTH_PORT: $AUTH_PORT
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      MYSQL_PORT: $MYSQL_PORT
+  filesystem:
+    build: ./filesystem/
+    restart: always
+    volumes:
+      - filesystemVideos:$FILESYSTEM_ROOT
+    environment:
+      FILESYSTEM_ROOT: $FILESYSTEM_ROOT
+      FILESYSTEM_PORT: $FILESYSTEM_PORT
+    ports:
+      - $FILESYSTEM_PORT:5000
+    
+  viewer:
+    depends_on:
+      - filesystem
+      - db
+    build: ./app/
+    ports:
+      - $VIEWER_PORT:5000
+    environment:
+      MYSQL_HOSTNAME: db
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      FILE_SYSTEM_HOSTNAME: filesystem
+      AUTH_HOSTNAME: auth
+      FILE_SYSTEM_PORT: $FILESYSTEM_PORT
+      AUTH_PORT: $AUTH_PORT
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      MYSQL_PORT: $MYSQL_PORT
+      FLASK_ENV: development
+  auth:
+    build: ./auth/
+    restart: always
+    environment:
+      FILESYSTEM_PORT: $AUTH_PORT
+    ports:
+      - $AUTH_PORT:5000
+
+volumes:
+  statefulDBVideos:
+    external: false
+  filesystemVideos:
+    external: false

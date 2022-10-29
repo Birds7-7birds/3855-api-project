@@ -14,11 +14,7 @@ from pykafka import KafkaClient
 from pykafka.common import OffsetType
 from threading import Thread 
 
-app = connexion.FlaskApp(__name__, specification_dir='')
-app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
-logger = logging.getLogger('basicLogger')
-
-with open('.\Api project\storage/app_conf_remote.yml', 'r') as f:
+with open('.\Api project\storage/app_conf.yml', 'r') as f:
     app_config = yaml.safe_load(f.read())
 
 with open('.\Api project\storage/log_conf.yml', 'r') as f:
@@ -120,8 +116,8 @@ def get_new_items(timestamp):
 
 def process_messages():
     """ Process event messages """
-    hostname = "%s:%d" % (app_config["events"]["hostname"],
-    app_config["events"]["port"])
+    logger.debug(f'{app_config}')
+    hostname = f'{app_config["events"]["hostname"]}:{app_config["events"]["port"]}'
     client = KafkaClient(hosts=hostname)
     topic = client.topics[str.encode(app_config["events"]["topic"])]
     consumer = topic.get_simple_consumer(consumer_group=b'event_group',
@@ -134,11 +130,15 @@ def process_messages():
         payload = msg["payload"]
         if msg["type"] == "event1": # Change this to your event type
             postAuction(payload)
-            logger.info(f'posting to ${msg} storage')
+            logger.info(f'posting {msg} storage')
         elif msg["type"] == "bidAuction": # Change this to your event type
             bidAuction(payload)
-            logger.info(f'posting to ${msg} storage')
+            logger.info(f'posting {msg} storage')
         consumer.commit_offsets()
+
+app = connexion.FlaskApp(__name__, specification_dir='')
+app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
+logger = logging.getLogger('basicLogger')
 
 if __name__ == "__main__":
     t1 = Thread(target=process_messages)

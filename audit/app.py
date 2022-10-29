@@ -9,15 +9,10 @@ from pykafka import KafkaClient
 import datetime
 from connexion import NoContent
 
-
-app = connexion.FlaskApp(__name__, specification_dir='')
-app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
-logger = logging.getLogger('basicLogger')
-
-with open('.\Api project\storage/app_conf.yml', 'r') as f:
+with open('.\Api project/audit/app_conf.yml', 'r') as f:
     app_config = yaml.safe_load(f.read())
 
-with open('.\Api project\storage/log_conf.yml', 'r') as f:
+with open('.\Api project/audit/log_conf.yml', 'r') as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
 
@@ -80,6 +75,11 @@ def bidAuction(index):
     logger.error("Could not find BP at index %d" % index)
     return { "message": "Not Found"}, 404
 
+
+app = connexion.FlaskApp(__name__, specification_dir='')
+app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
+logger = logging.getLogger('basicLogger')
+
 if __name__ == "__main__":
 
-    app.run(port=8080)
+    app.run(port=8110)
