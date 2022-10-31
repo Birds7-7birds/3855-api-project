@@ -34,7 +34,8 @@ def postAuction(body):
     producer.produce(msg_str.encode('utf-8'))
     # logger.info('Returned postAuction event response(Id: ' + trace + ') with status ' + str(x.status_code))
     logger.info('Returned postAuction event response(Id: ' + trace + ') with status 201 i hope')
-    return "response", 201
+
+    return "done  👍 ", 201
 
 def bidAuction(body):
     trace = str(uuid.uuid4())
@@ -53,7 +54,7 @@ def bidAuction(body):
     # logger.info('Returned postAuction event response(Id: ' + trace + ') with status ' + str(x.status_code))
     logger.info('Returned bidAuction event response(Id: ' + trace + ') with status 201 i hope')
 
-    return "response", 201
+    return "done  👍", 201
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api("openapi.yml", strict_validation=True, validate_responses=True)

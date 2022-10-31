@@ -1,9 +1,5 @@
 version: 1
-BID_URL:
-  url: http://localhost:8090/bid
-AUCTION_URL:
-  url: http://localhost:8090/listItem
 events:
-  hostname: ${VAR:HOSTNAME}
+  hostname: ec2-54-203-2-61.us-west-2.compute.amazonaws.com
   port: 9092
   topic: events

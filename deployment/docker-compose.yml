@@ -1,73 +1,28 @@
 version: '3'
 services:
-  db:
-    build: ./database/
+  receiver:
+    build: ../Receiver/
     restart: always
-    volumes:
-      - statefulDBVideos:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-      MYSQL_DATABASE: $MYSQL_DATABASE
-      MYSQL_USER: $MYSQL_USER
-      MYSQL_PASSWORD: $MYSQL_PASSWORD
     ports:
-      - $MYSQL_PORT:$MYSQL_PORT
-  upload:
-    depends_on:
-      - db
-      - filesystem
-    build: ./upload/
-    ports:
-      - "5000:5000"
-    environment:
-      MYSQL_HOSTNAME: db
-      MYSQL_DATABASE: $MYSQL_DATABASE
-      FILE_SYSTEM_HOSTNAME: filesystem
-      AUTH_HOSTNAME: auth
-      FILE_SYSTEM_PORT: $FILESYSTEM_PORT
-      AUTH_PORT: $AUTH_PORT
-      MYSQL_USER: $MYSQL_USER
-      MYSQL_PASSWORD: $MYSQL_PASSWORD
-      MYSQL_PORT: $MYSQL_PORT
-  filesystem:
-    build: ./filesystem/
+      - 8080:8080
+  storage:
+    build: ../storage/
     restart: always
-    volumes:
-      - filesystemVideos:$FILESYSTEM_ROOT
-    environment:
-      FILESYSTEM_ROOT: $FILESYSTEM_ROOT
-      FILESYSTEM_PORT: $FILESYSTEM_PORT
     ports:
-      - $FILESYSTEM_PORT:5000
-    
-  viewer:
-    depends_on:
-      - filesystem
-      - db
-    build: ./app/
-    ports:
-      - $VIEWER_PORT:5000
-    environment:
-      MYSQL_HOSTNAME: db
-      MYSQL_DATABASE: $MYSQL_DATABASE
-      FILE_SYSTEM_HOSTNAME: filesystem
-      AUTH_HOSTNAME: auth
-      FILE_SYSTEM_PORT: $FILESYSTEM_PORT
-      AUTH_PORT: $AUTH_PORT
-      MYSQL_USER: $MYSQL_USER
-      MYSQL_PASSWORD: $MYSQL_PASSWORD
-      MYSQL_PORT: $MYSQL_PORT
-      FLASK_ENV: development
-  auth:
-    build: ./auth/
+      - 8090:8090
+  processing_service:
+    depends_on: 
+      - storage
+    build: ../processing_service/
     restart: always
-    environment:
-      FILESYSTEM_PORT: $AUTH_PORT
     ports:
-      - $AUTH_PORT:5000
+      - 8100
+    network_mode: host
+  audit:
+    build: ../audit/
+    restart: always
+    ports:
+      - 8110:8110
 
-volumes:
-  statefulDBVideos:
-    external: false
-  filesystemVideos:
-    external: false
+
+      # HOSTNAME: ec2-34-219-221-192.us-west-2.compute.amazonaws.com

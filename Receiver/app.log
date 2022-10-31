@@ -1,0 +1,2 @@
+2022-10-29 15:34:10,138 - basicLogger - DEBUG - ec2-54-203-2-61.us-west-2.compute.amazonaws.com:9092  is the host
+2022-10-29 15:40:40,170 - basicLogger - INFO - Returned bidAuction event response(Id: f19bc789-daac-4d5a-80c3-9f376e8da40a) with status 201 i hope

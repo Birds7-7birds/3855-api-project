@@ -13,14 +13,10 @@ import datetime
 import uuid
 from sqlalchemy import func
 
-app = connexion.FlaskApp(__name__, specification_dir='')
-app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
-logger = logging.getLogger('basicLogger')
-
-with open('.\Api project\processing_service/app_conf.yml', 'r') as f:
+with open('./app_conf.yml', 'r') as f:
     app_config = yaml.safe_load(f.read())
 
-with open('.\Api project\processing_service/log_conf.yml', 'r') as f:
+with open('./log_conf.yml', 'r') as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
 
@@ -54,7 +50,7 @@ def populate_stats():
         latestime = (results["last_updated"]).strftime("%Y-%m-%dT%H:%M:%SZ")
     # latestime = default_time
 
-    get_bids = requests.get(app_config["scheduler"]["getBids"]["url"] + '?timestamp=' + latestime, headers={
+    get_bids = requests.get(app_config["eventstore"]["url"] + app_config["scheduler"]["getBids"]["url"] + '?timestamp=' + latestime, headers={
     'Content-Type': 'application/json'})
 
     get_bids__status_code = get_bids.status_code
@@ -62,7 +58,7 @@ def populate_stats():
     print("get_bids", get_bids__json, "\n-----------------\n")
     print(len(get_bids__json))
 
-    get_items = requests.get(app_config["scheduler"]["getItems"]["url"] + '?timestamp=' + latestime, headers={
+    get_items = requests.get(app_config["eventstore"]["url"] + app_config["scheduler"]["getItems"]["url"] + '?timestamp=' + latestime, headers={
     'Content-Type': 'application/json'})
     
     get_items__status_code = get_items.status_code
@@ -143,6 +139,10 @@ def get_stats():
         logger.info("The request has been completed.")
 
     return result, 200
+
+app = connexion.FlaskApp(__name__, specification_dir='')
+app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
+logger = logging.getLogger('basicLogger')
 
 
 if __name__ == "__main__":

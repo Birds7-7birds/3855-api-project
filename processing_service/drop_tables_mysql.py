@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect('point.sqlite')
+conn = sqlite3.connect('stats.sqlite')
 
 c = conn.cursor()
 c.execute('''
