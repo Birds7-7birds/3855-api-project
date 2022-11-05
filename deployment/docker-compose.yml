@@ -15,9 +15,12 @@ services:
       - storage
     build: ../processing_service/
     restart: always
-    # ports:
-    #   - 8100
-    network_mode: host
+    ports:
+      - 8100:8100
+    environment:
+      STORAGE_HOSTNAME: storage
+      STORAGE_PORT: 8090
+    # network_mode: host
   audit:
     build: ../audit/
     restart: always
