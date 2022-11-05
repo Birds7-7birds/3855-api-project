@@ -13,6 +13,7 @@ import json
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
 from threading import Thread 
+from os import environ
 
 with open('./app_conf.yml', 'r') as f:
     app_config = yaml.safe_load(f.read())
@@ -21,14 +22,14 @@ with open('./log_conf.yml', 'r') as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
 
-DB_ENGINE = create_engine(f'mysql+pymysql://{app_config["datastore"]["user"]}:{app_config["datastore"]["password"]}@{app_config["datastore"]["hostname"]}:{app_config["datastore"]["port"]}/{app_config["datastore"]["db"]}')
+DB_ENGINE = create_engine(f'mysql+pymysql://{app_config["datastore"]["user"]}:{app_config["datastore"]["password"]}@{environ["KAFKA_DNS"]}:{app_config["datastore"]["port"]}/{app_config["datastore"]["db"]}')
 Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
 
 def postAuction(body):
     """ Receives a auction post reading """
     trace = body['traceId']
-    logging.info(f'connecting to DB. Hostname:{app_config["datastore"]["hostname"]} on port: {app_config["datastore"]["port"]}')
+    logging.info(f'connecting to DB. Hostname:{environ["KAFKA_DNS"]} on port: {app_config["datastore"]["port"]}')
     logging.debug("Received event postAuction request with a trace id of " + trace)
 
     session = DB_SESSION()
@@ -46,7 +47,7 @@ def postAuction(body):
     session.commit()
     session.close()
     logger.debug('Received postAuction event (Id: ' + trace + ')')
-    logger.info(f'connecting to DB. Hostname:{app_config["datastore"]["hostname"]} on port: {app_config["datastore"]["port"]}')
+    logger.info(f'connecting to DB. Hostname:{environ["KAFKA_DNS"]} on port: {app_config["datastore"]["port"]}')
 
 
     return NoContent, 201
@@ -58,7 +59,7 @@ def bidAuction(body):
     session = DB_SESSION()
     trace = body['traceId']
     logging.debug("Received event bidAuction request with a trace id of " + trace)
-    logging.info(f'connecting to DB. Hostname:{app_config["datastore"]["hostname"]} on port: {app_config["datastore"]["port"]}')
+    logging.info(f'connecting to DB. Hostname:{environ["KAFKA_DNS"]} on port: {app_config["datastore"]["port"]}')
 
     bid = bidAuctionClass(body['traceId'],
                    body['itemID'],
@@ -72,7 +73,7 @@ def bidAuction(body):
 
     session.commit()
     session.close()
-    logger.info(f'connecting to DB. Hostname:{app_config["datastore"]["hostname"]} on port: {app_config["datastore"]["port"]}')
+    logger.info(f'connecting to DB. Hostname:{environ["KAFKA_DNS"]} on port: {app_config["datastore"]["port"]}')
 
     logger.debug('Received bidAuction event (Id: ' + trace + ')')
 
@@ -117,7 +118,7 @@ def get_new_items(timestamp):
 def process_messages():
     """ Process event messages """
     logger.debug(f'{app_config}')
-    hostname = f'{app_config["events"]["hostname"]}:{app_config["events"]["port"]}'
+    hostname = f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}'
     client = KafkaClient(hosts=hostname)
     topic = client.topics[str.encode(app_config["events"]["topic"])]
     consumer = topic.get_simple_consumer(consumer_group=b'event_group',

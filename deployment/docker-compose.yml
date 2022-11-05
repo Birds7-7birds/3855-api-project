@@ -5,11 +5,15 @@ services:
     restart: always
     ports:
       - 8080:8080
+    environment:
+      KAFKA_DNS: ec2-54-200-72-83.us-west-2.compute.amazonaws.com
   storage:
     build: ../storage/
     restart: always
     ports:
       - 8090:8090
+    environment:
+      KAFKA_DNS: ec2-54-200-72-83.us-west-2.compute.amazonaws.com
   processing_service:
     depends_on: 
       - storage
@@ -26,6 +30,8 @@ services:
     restart: always
     ports:
       - 8110:8110
+    environment:
+     KAFKA_DNS: ec2-54-200-72-83.us-west-2.compute.amazonaws.com
 
 
       # HOSTNAME: ec2-34-219-221-192.us-west-2.compute.amazonaws.com

@@ -8,6 +8,7 @@ import json
 from pykafka import KafkaClient
 import datetime
 from connexion import NoContent
+from os import environ
 
 with open('./app_conf.yml', 'r') as f:
     app_config = yaml.safe_load(f.read())
@@ -18,7 +19,7 @@ with open('./log_conf.yml', 'r') as f:
 
 def postAuction(index):
     """ Get auction History """
-    hostname = "%s:%d" % (app_config["events"]["hostname"],
+    hostname = "%s:%d" % (environ["KAFKA_DNS"],
     app_config["events"]["port"])
     client = KafkaClient(hosts=hostname)
     topic = client.topics[str.encode(app_config["events"]["topic"])]
@@ -48,7 +49,7 @@ def postAuction(index):
 
 def bidAuction(index):
     """ Get auction History """
-    hostname = "%s:%d" % (app_config["events"]["hostname"],
+    hostname = "%s:%d" % (environ["KAFKA_DNS"],
     app_config["events"]["port"])
     client = KafkaClient(hosts=hostname)
     topic = client.topics[str.encode(app_config["events"]["topic"])]

@@ -10,6 +10,7 @@ from pykafka import KafkaClient
 import datetime
 from connexion import NoContent
 import requests
+from os import environ
 
 with open('./app_conf.yml', 'r') as f:
     app_config = yaml.safe_load(f.read())
@@ -22,7 +23,7 @@ def postAuction(body):
     trace = str(uuid.uuid4())
     body["traceId"] = trace
     logging.info("Received event postAuction request with a trace id of " + trace)
-    client = KafkaClient(hosts=f'{app_config["events"]["hostname"]}:{app_config["events"]["port"]}')
+    client = KafkaClient(hosts=f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}')
     topic = client.topics[str.encode(app_config["events"]["topic"])]
     producer = topic.get_sync_producer()
     msg = { "type": "postAuction",
@@ -41,7 +42,7 @@ def bidAuction(body):
     trace = str(uuid.uuid4())
     body["traceId"] = trace
     logging.info("Received event bidAuction request with a trace id of " + trace)
-    client = KafkaClient(hosts=f'{app_config["events"]["hostname"]}:{app_config["events"]["port"]}')
+    client = KafkaClient(hosts=f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}')
     topic = client.topics[str.encode(app_config["events"]["topic"])]
     producer = topic.get_sync_producer()
     msg = { "type": "bidAuction",
