@@ -15,8 +15,8 @@ services:
       - storage
     build: ../processing_service/
     restart: always
-    ports:
-      - 8100
+    # ports:
+    #   - 8100
     network_mode: host
   audit:
     build: ../audit/

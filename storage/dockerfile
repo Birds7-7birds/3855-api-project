@@ -21,7 +21,7 @@ FROM ubuntu
 LABEL maintainer="xelchantiry@my.bcit.ca"
 
 ENV FILESYSTEM_ROOT="/app"
-# ENV HOSTNAME = "ec2-54-203-2-61.us-west-2.compute.amazonaws.com"
+# ENV HOSTNAME = "ec2-54-200-72-83.us-west-2.compute.amazonaws.com"
 
 WORKDIR $FILESYSTEM_ROOT
 
