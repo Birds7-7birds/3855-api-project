@@ -33,5 +33,13 @@ services:
     environment:
      KAFKA_DNS: ec2-54-200-72-83.us-west-2.compute.amazonaws.com
 
-
-      # HOSTNAME: ec2-34-219-221-192.us-west-2.compute.amazonaws.com
+  dashboard:
+    build: ../Sample_Code/
+    # image: dashboard
+    ports:
+      - "3000:3000"
+    depends_on:
+      - "processing_service"
+      - "audit"
+    environment:
+      HOST_DNS: ec2-54-200-72-83.us-west-2.compute.amazonaws.com

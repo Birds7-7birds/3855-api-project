@@ -6,11 +6,12 @@ import AppStats from './components/AppStats'
 
 function App() {
 
-    const endpoints = ["blood_pressure", "heart_rate"]
+    const endpoints = ["listItem", "bid"]
 
     const rendered_endpoints = endpoints.map((endpoint) => {
         return <EndpointAudit key={endpoint} endpoint={endpoint}/>
     })
+    console.log(process.env.REACT_APP_API_URL);
 
     return (
         <div className="App">

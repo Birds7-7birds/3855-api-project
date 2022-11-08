@@ -7,8 +7,8 @@ export default function AppStats() {
     const [error, setError] = useState(null)
 
 	const getStats = () => {
-	
-        fetch(`http://<Cloud DNS>:8100/stats`)
+	// localhost tester
+        fetch(`http://${process.env.REACT_APP_API_URL}:8100/stats`)
             .then(res => res.json())
             .then((result)=>{
 				console.log("Received Stats")
@@ -35,21 +35,21 @@ export default function AppStats() {
                 <table className={"StatsTable"}>
 					<tbody>
 						<tr>
-							<th>Blood Pressure</th>
-							<th>Heart Rate</th>
+							<th>id</th>
+							<th>traceID</th>
 						</tr>
 						<tr>
-							<td># BP: {stats['num_bp_readings']}</td>
-							<td># HR: {stats['num_hr_readings']}</td>
+							<td># id: {stats['id']}</td>
+							<td># traceID: {stats['traceID']}</td>
 						</tr>
 						<tr>
-							<td colspan="2">Max BP Systolic: {stats['max_bp_sys_reading']}</td>
+							<td colspan="2">total bids: {stats['num_bids']}</td>
 						</tr>
 						<tr>
-							<td colspan="2">Max BR Diastolic: {stats['max_bp_dia_reading']}</td>
+							<td colspan="2">Max instabuy price: {stats['max_instabuy_price']}</td>
 						</tr>
 						<tr>
-							<td colspan="2">Max HR: {stats['max_bp_sys_reading']}</td>
+							<td colspan="2">Max bid: {stats['max_bid']}</td>
 						</tr>
 					</tbody>
                 </table>
