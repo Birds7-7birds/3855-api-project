@@ -107,8 +107,11 @@ def populate_stats():
         results
         num_bids += int(results["num_bids"])
         max_bid += int(results["max_bid"])
-        num_items_listed += int(results["num_items_listed"])
-        max_instabuy_price += int(results["max_instabuy_price"])
+        if (num_items_listed < int(results["num_items_listed"])) :
+            num_items_listed = int(results["num_items_listed"])
+        if max_instabuy_price < int(results["max_instabuy_price"]):
+            max_instabuy_price = int(results["max_instabuy_price"])
+        
 
     stats = Stats(num_bids,
                 max_bid,
