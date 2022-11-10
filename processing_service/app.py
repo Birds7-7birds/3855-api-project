@@ -106,9 +106,10 @@ def populate_stats():
             results = session.query(Stats).order_by(Stats.last_updated.desc())[0].to_dict()
         results
         num_bids += int(results["num_bids"])
-        max_bid += int(results["max_bid"])
-        if (num_items_listed < int(results["num_items_listed"])) :
-            num_items_listed = int(results["num_items_listed"])
+        if max_bid < int(results["max_bid"]):
+            max_bid = int(results["max_bid"])
+
+        num_items_listed += int(results["num_items_listed"])
         if max_instabuy_price < int(results["max_instabuy_price"]):
             max_instabuy_price = int(results["max_instabuy_price"])
         
