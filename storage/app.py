@@ -129,7 +129,7 @@ def process_messages():
         msg = json.loads(msg_str)
         logger.info("Message: %s" % msg)
         payload = msg["payload"]
-        if msg["type"] == "event1": # Change this to your event type
+        if msg["type"] == "postAuction": # Change this to your event type
             postAuction(payload)
             logger.info(f'posting {msg} storage')
         elif msg["type"] == "bidAuction": # Change this to your event type
