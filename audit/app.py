@@ -8,22 +8,19 @@ import json
 from pykafka import KafkaClient
 import datetime
 from connexion import NoContent
+from os import environ
+from flask_cors import CORS, cross_origin
 
-
-app = connexion.FlaskApp(__name__, specification_dir='')
-app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
-logger = logging.getLogger('basicLogger')
-
-with open('.\Api project\storage/app_conf.yml', 'r') as f:
+with open('./app_conf.yml', 'r') as f:
     app_config = yaml.safe_load(f.read())
 
-with open('.\Api project\storage/log_conf.yml', 'r') as f:
+with open('./log_conf.yml', 'r') as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
 
 def postAuction(index):
     """ Get auction History """
-    hostname = "%s:%d" % (app_config["events"]["hostname"],
+    hostname = "%s:%d" % (environ["KAFKA_DNS"],
     app_config["events"]["port"])
     client = KafkaClient(hosts=hostname)
     topic = client.topics[str.encode(app_config["events"]["topic"])]
@@ -53,7 +50,7 @@ def postAuction(index):
 
 def bidAuction(index):
     """ Get auction History """
-    hostname = "%s:%d" % (app_config["events"]["hostname"],
+    hostname = "%s:%d" % (environ["KAFKA_DNS"],
     app_config["events"]["port"])
     client = KafkaClient(hosts=hostname)
     topic = client.topics[str.encode(app_config["events"]["topic"])]
@@ -80,6 +77,13 @@ def bidAuction(index):
     logger.error("Could not find BP at index %d" % index)
     return { "message": "Not Found"}, 404
 
+
+app = connexion.FlaskApp(__name__, specification_dir='')
+CORS(app.app)
+app.app.config['CORS_HEADERS'] = 'Content-Type'
+app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
+logger = logging.getLogger('basicLogger')
+
 if __name__ == "__main__":
 
-    app.run(port=8080)
+    app.run(port=8110)

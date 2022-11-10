@@ -1,0 +1,45 @@
+version: '3'
+services:
+  receiver:
+    build: ../Receiver/
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      KAFKA_DNS: ec2-54-200-72-83.us-west-2.compute.amazonaws.com
+  storage:
+    build: ../storage/
+    restart: always
+    ports:
+      - 8090:8090
+    environment:
+      KAFKA_DNS: ec2-54-200-72-83.us-west-2.compute.amazonaws.com
+  processing_service:
+    depends_on: 
+      - storage
+    build: ../processing_service/
+    restart: always
+    ports:
+      - 8100:8100
+    environment:
+      STORAGE_HOSTNAME: storage
+      STORAGE_PORT: 8090
+    # network_mode: host
+  audit:
+    build: ../audit/
+    restart: always
+    ports:
+      - 8110:8110
+    environment:
+     KAFKA_DNS: ec2-54-200-72-83.us-west-2.compute.amazonaws.com
+
+  dashboard:
+    build: ../Sample_Code/
+    # image: dashboard
+    ports:
+      - "3000:3000"
+    depends_on:
+      - "processing_service"
+      - "audit"
+    environment:
+      HOST_DNS: ec2-54-200-72-83.us-west-2.compute.amazonaws.com

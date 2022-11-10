@@ -4,8 +4,10 @@ datastore:
 scheduler:
   period_sec: 5
   getBids:
-    url: http://localhost:8090/getbids
+    url: /getbids
   getItems:
-    url: http://localhost:8090/getItems
+    url: /getItems
 eventstore:
   url: http://localhost:8090
+  
+  

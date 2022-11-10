@@ -8,16 +8,9 @@ info:
   title: Simple Inventory API
   contact:
     email: real@email.com
-tags:
-  - name: seller
-    description: this is a seller
-  - name: buyer
-    description: this is a buyer
 paths:
   /listItem:
     get:
-      tags: 
-        - seller
       summary: adds an auctions item
       operationId: app.postAuction
       description: Adds an auctions item to the system
@@ -26,22 +19,21 @@ paths:
           in: query
           description: index of kafka event
           schema:
-            type: intiger
+            type: integer
       responses:
         '201':
           description: 'item listed'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/bidAuctionItem'
         '400':
           description: 'invalid input, object invalid'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/postAuctionItem'
-        description: Inventory item to add
+
   /bid:
     get:
-      tags:
-        - buyer
       summary: bid on an aution item
       operationId: app.bidAuction
       description: bid on an aution item in system
@@ -50,18 +42,18 @@ paths:
           in: query
           description: index of kafka event
           schema:
-            type: intiger
+            type: integer
       responses:
         '201':
           description: 'bid on item'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/bidAuctionItem'
         '400':
           description: 'invalid input, object invalid'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/bidAuctionItem'
-        description: 'bid on auction item'
     
 components:
   schemas:

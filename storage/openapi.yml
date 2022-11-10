@@ -79,51 +79,6 @@ paths:
                 properties:
                   message:
                     type: string
-  # /listItem:
-  #   post:
-  #     tags: 
-  #       - seller
-  #     summary: adds an auctions item
-  #     operationId: app.postAuction
-  #     description: Adds an auctions item to the system
-  #     responses:
-  #       '201':
-  #         description: 'item listed'
-  #       '400':
-  #         description: 'invalid input, object invalid'
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/postAuctionItem'
-  #       description: Inventory item to add
-  # /bid:
-  #   post:
-  #     tags:
-  #       - buyer
-  #     summary: bid on an aution item
-  #     operationId: app.bidAuction
-  #     description: bid on an aution item in system
-  #     responses:
-  #       '201':
-  #         description: 'bid on item'
-  #       '400':
-  #         description: 'invalid input, object invalid'
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/bidAuctionItem'
-  #       description: 'bid on auction item'
-  
-
-
-
-
-
-
-
-
 
 
 components:
