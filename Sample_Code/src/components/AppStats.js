@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import '../App.css';
 
+
 export default function AppStats() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [stats, setStats] = useState({});
     const [error, setError] = useState(null)
-
+    const [index, setIndex] = useState(null);
 	const getStats = () => {
 	// localhost tester
         fetch(`http://${process.env.REACT_APP_API_URL}:8100/stats`)
@@ -14,6 +15,7 @@ export default function AppStats() {
 				console.log("Received Stats")
                 setStats(result);
                 setIsLoaded(true);
+                setIndex(rand_val);
             },(error) =>{
                 setError(error)
                 setIsLoaded(true);
@@ -45,6 +47,9 @@ export default function AppStats() {
 						<tr>
 							<td colspan="2">total bids: {stats['num_bids']}</td>
 						</tr>
+                        <tr>
+							<td colspan="2">total bids: {stats['num_items_listed']}</td>
+						</tr>
 						<tr>
 							<td colspan="2">Max instabuy price: {stats['max_instabuy_price']}</td>
 						</tr>
@@ -53,7 +58,7 @@ export default function AppStats() {
 						</tr>
 					</tbody>
                 </table>
-                <h3>Last Updated: {stats['last_updated']}</h3>
+                <h3>Last Updated: {stats['last_updated']} - {index}</h3>
 
             </div>
         )

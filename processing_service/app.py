@@ -42,18 +42,20 @@ def populate_stats():
 
     session = DB_SESSION()
     check =  session.query(Stats).order_by(Stats.last_updated.desc()).first()
-
+    
+    curr_curr = curr_time.strftime("%Y-%m-%dT%H:%M:%S")
 
     default_time = '1900-10-15T16:47:03Z'
     if (check == None ):
         latestime = default_time
+
     else: 
         results = session.query(Stats).order_by(Stats.last_updated.desc())[0].to_dict()
         latestime = (results["last_updated"]).strftime("%Y-%m-%dT%H:%M:%SZ")
     # latestime = default_time
 
     # get_bids = requests.get(app_config["eventstore"]["url"] + app_config["scheduler"]["getBids"]["url"] + '?timestamp=' + latestime, headers={
-    get_bids = requests.get("http://" + environ["STORAGE_HOSTNAME"] + ":" + environ["STORAGE_PORT"] + app_config["scheduler"]["getBids"]["url"] + '?timestamp=' + latestime, headers={
+    get_bids = requests.get("http://" + environ["STORAGE_HOSTNAME"] + ":" + environ["STORAGE_PORT"] + app_config["scheduler"]["getBids"]["url"] + '?timestamp=' + latestime + '?end_timestamp=' + curr_curr, headers={
     'Content-Type': 'application/json'})
 
     get_bids__status_code = get_bids.status_code
@@ -62,7 +64,7 @@ def populate_stats():
     print(len(get_bids__json))
 
     # get_items = requests.get(app_config["eventstore"]["url"] + app_config["scheduler"]["getItems"]["url"] + '?timestamp=' + latestime, headers={
-    get_items = requests.get("http://" + environ["STORAGE_HOSTNAME"] + ":" + environ["STORAGE_PORT"] + app_config["scheduler"]["getItems"]["url"] + '?timestamp=' + latestime, headers={
+    get_items = requests.get("http://" + environ["STORAGE_HOSTNAME"] + ":" + environ["STORAGE_PORT"] + app_config["scheduler"]["getItems"]["url"] + '?timestamp=' + latestime + '?end_timestamp=' + curr_curr, headers={
 
     'Content-Type': 'application/json'})
     
