@@ -5,6 +5,7 @@ datastore:
   hostname: ec2-54-200-72-83.us-west-2.compute.amazonaws.com
   port: 3306
   db: "auctiondb"
+  retries: 6
 events:
   hostname: ec2-54-200-72-83.us-west-2.compute.amazonaws.com
   port: 9092
