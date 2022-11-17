@@ -7,6 +7,8 @@ datastore:
   db: "auctiondb"
   retries: 6
 events:
+  max_retry: 4
+  sleep: 4
   hostname: ec2-54-200-72-83.us-west-2.compute.amazonaws.com
   port: 9092
   topic: events
