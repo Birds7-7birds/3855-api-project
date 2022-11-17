@@ -33,6 +33,9 @@ def init_scheduler():
                     seconds=app_config['scheduler']['period_sec'])
     sched.start()
 
+def healthcheck():
+    return 200
+
 def populate_stats():
     trace = str(uuid.uuid4())
     # periodically update stats
