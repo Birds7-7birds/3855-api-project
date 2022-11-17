@@ -66,6 +66,7 @@ def bidAuction(body):
 
     curr_retry = 0
     while curr_retry < app_config["events"]["max_retry"]:
+        curr_retry += 1
         try:
             logger.info(f"Trying to connect to Kafka, retry count: {curr_retry}")
             client = KafkaClient(hosts=f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}')
