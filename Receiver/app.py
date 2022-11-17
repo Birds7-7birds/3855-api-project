@@ -30,21 +30,22 @@ with open('./log_conf.yml', 'r') as f:
 #         logger.error("Connection Failed!")
 #         time.sleep(app_config["events"]["sleep"])
 
+curr_retry = 0
+while curr_retry < app_config["events"]["max_retry"]:
+    curr_retry += 1
+    try:
+        logger.info(f"Trying to connect to Kafka, retry count: {curr_retry}")
+        client = KafkaClient(hosts=f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}')
+        topic = client.topics[str.encode(app_config["events"]["topic"])]
+        producer = topic.get_sync_producer()
+    except:
+        logger.error("Connection Failed!")
+        time.sleep(app_config["events"]["sleep"])
+
 def postAuction(body):
     trace = str(uuid.uuid4())
     body["traceId"] = trace
     logging.info("Received event postAuction request with a trace id of " + trace)
-    curr_retry = 0
-    while curr_retry < app_config["events"]["max_retry"]:
-        curr_retry += 1
-        try:
-            logger.info(f"Trying to connect to Kafka, retry count: {curr_retry}")
-            client = KafkaClient(hosts=f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}')
-            topic = client.topics[str.encode(app_config["events"]["topic"])]
-            producer = topic.get_sync_producer()
-        except:
-            logger.error("Connection Failed!")
-            time.sleep(app_config["events"]["sleep"])
 
     msg = { "type": "postAuction",
             "datetime" :
@@ -64,17 +65,17 @@ def bidAuction(body):
     logging.info("Received event bidAuction request with a trace id of " + trace)
 
 
-    curr_retry = 0
-    while curr_retry < app_config["events"]["max_retry"]:
-        curr_retry += 1
-        try:
-            logger.info(f"Trying to connect to Kafka, retry count: {curr_retry}")
-            client = KafkaClient(hosts=f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}')
-            topic = client.topics[str.encode(app_config["events"]["topic"])]
-            producer = topic.get_sync_producer()
-        except:
-            logger.error("Connection Failed!")
-            time.sleep(app_config["events"]["sleep"])
+    # curr_retry = 0
+    # while curr_retry < app_config["events"]["max_retry"]:
+    #     curr_retry += 1
+    #     try:
+    #         logger.info(f"Trying to connect to Kafka, retry count: {curr_retry}")
+    #         client = KafkaClient(hosts=f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}')
+    #         topic = client.topics[str.encode(app_config["events"]["topic"])]
+    #         producer = topic.get_sync_producer()
+    #     except:
+    #         logger.error("Connection Failed!")
+    #         time.sleep(app_config["events"]["sleep"])
 
     msg = { "type": "bidAuction",
             "datetime" :
