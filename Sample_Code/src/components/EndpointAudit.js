@@ -6,6 +6,7 @@ export default function EndpointAudit(props) {
     const [log, setLog] = useState(null);
     const [error, setError] = useState(null)
 	const rand_val = Math.floor(Math.random() * 100); // Get a random event from the event store
+    const [index, setIndex] = useState(null);
 
     const getAudit = () => {
         fetch(`http://${process.env.REACT_APP_API_URL}:8110/${props.endpoint}?index=${rand_val}`)
@@ -14,6 +15,7 @@ export default function EndpointAudit(props) {
 				console.log("Received Audit Results for " + props.endpoint)
                 setLog(result);
                 setIsLoaded(true);
+                setIndex(rand_vals);
             },(error) =>{
                 setError(error)
                 setIsLoaded(true);

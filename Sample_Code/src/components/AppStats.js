@@ -50,7 +50,7 @@ export default function AppStats() {
 							<td colspan="2">total bids: {stats['num_bids']}</td>
 						</tr>
                         <tr>
-							<td colspan="2">total bids: {stats['num_items_listed']}</td>
+							<td colspan="2">total items: {stats['num_items_listed']}</td>
 						</tr>
 						<tr>
 							<td colspan="2">Max instabuy price: {stats['max_instabuy_price']}</td>
@@ -60,7 +60,7 @@ export default function AppStats() {
 						</tr>
 					</tbody>
                 </table>
-                <h3>Last Updated: {stats['last_updated']} - {index}</h3>
+                <h3>Last Updated: {stats['last_updated']}</h3>
 
             </div>
         )
