@@ -139,28 +139,23 @@ postAuctionClass.date_created < end_timestamp_datetime))
 def process_messages():
     """ Process event messages """
     # logger.debug(f'{app_config}')
-    hostname = f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}'
+    # hostname = f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}'
 
-    # logger.info(f"attempting to connect to {hostname}")
-    # tries = 0
-    # while ((tries < app_config['datastore']['retries']) and ()):
-    #     tries += 1
-    curr_retry = 0
-    while curr_retry < app_config["events"]["max_retry"]:
-        try:
-            logger.info(f"Trying to connect to Kafka, retry count: {curr_retry}")
-            client = KafkaClient(hosts=hostname)
-            topic = client.topics[str.encode(app_config["events"]["topic"])]
-        except:
-            logger.error("Connection Failed!")
-            time.sleep(app_config["events"]["sleep"])
-        curr_retry += 1
+
+    # curr_retry = 0
+    # while curr_retry < app_config["events"]["max_retry"]:
+    #     try:
+    #         logger.info(f"Trying to connect to Kafka, retry count: {curr_retry}")
+    #         client = KafkaClient(hosts=hostname)
+    #         topic = client.topics[str.encode(app_config["events"]["topic"])]
+    #     except:
+    #         logger.error("Connection Failed!")
+    #         time.sleep(app_config["events"]["sleep"])
+    #     curr_retry += 1
     consumer = topic.get_simple_consumer(consumer_group=b'event_group',
                                         reset_offset_on_start=False,
                                         auto_offset_reset=OffsetType.LATEST)
-    # This is blocking - it will wait for a new message
-    # client = KafkaClient(hosts=hostname)
-    # topic = client.topics[str.encode(app_config["events"]["topic"])]
+
     consumer = topic.get_simple_consumer(consumer_group=b'event_group',
                                             reset_offset_on_start=False,
                                             auto_offset_reset=OffsetType.LATEST)
@@ -177,9 +172,21 @@ def process_messages():
             logger.info(f'posting {msg} storage')
         consumer.commit_offsets()
 
+logger = logging.getLogger('basicLogger')
+
+hostname = f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}'
+curr_retry = 0
+while curr_retry < app_config["events"]["max_retry"]:
+    try:
+        logger.info(f"Trying to connect to Kafka, retry count: {curr_retry}")
+        client = KafkaClient(hosts=hostname)
+        topic = client.topics[str.encode(app_config["events"]["topic"])]
+    except:
+        logger.error("Connection Failed!")
+        time.sleep(app_config["events"]["sleep"])
+    curr_retry += 1
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
-logger = logging.getLogger('basicLogger')
 
 if __name__ == "__main__":
     t1 = Thread(target=process_messages)
