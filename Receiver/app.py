@@ -19,17 +19,19 @@ with open('./log_conf.yml', 'r') as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
 
-# curr_retry = 0
-# while curr_retry < app_config["events"]["max_retry"]:
-#     try:
-#         logger.info(f"Trying to connect to Kafka, retry count: {curr_retry}")
-#         client = KafkaClient(hosts=hostname)
-#         topic = client.topics[str.encode(app_config["events"]["topic"])]
-#         producer = topic.get_sync_producer()
-#     except:
-#         logger.error("Connection Failed!")
-#         time.sleep(app_config["events"]["sleep"])
+logger = logging.getLogger('basicLogger')
 
+curr_retry = 0
+while curr_retry < app_config["events"]["max_retry"]:
+    curr_retry += 1
+    try:
+        logger.info(f"Trying to connect to Kafka, retry count: {curr_retry}")
+        client = KafkaClient(hosts=f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}')
+        topic = client.topics[str.encode(app_config["events"]["topic"])]
+        producer = topic.get_sync_producer()
+    except:
+        logger.error("Connection Failed!")
+        time.sleep(app_config["events"]["sleep"])
 
 
 def postAuction(body):
@@ -81,19 +83,6 @@ def bidAuction(body):
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
-logger = logging.getLogger('basicLogger')
-
-curr_retry = 0
-while curr_retry < app_config["events"]["max_retry"]:
-    curr_retry += 1
-    try:
-        logger.info(f"Trying to connect to Kafka, retry count: {curr_retry}")
-        client = KafkaClient(hosts=f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}')
-        topic = client.topics[str.encode(app_config["events"]["topic"])]
-        producer = topic.get_sync_producer()
-    except:
-        logger.error("Connection Failed!")
-        time.sleep(app_config["events"]["sleep"])
 if __name__ == "__main__":
 
     app.run(port=8080)
