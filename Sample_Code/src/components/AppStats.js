@@ -15,7 +15,9 @@ export default function AppStats() {
 				console.log("Received Stats")
                 setStats(result);
                 setIsLoaded(true);
-                setIndex(rand_val);
+                // setIndex(rand_val);
+                setIndex(stats['traceID']);
+
             },(error) =>{
                 setError(error)
                 setIsLoaded(true);
