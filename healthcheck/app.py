@@ -102,7 +102,7 @@ def check_health():
     return NoContent, 201
 
 app = connexion.FlaskApp(__name__, specification_dir='')
-app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
+app.add_api("openapi.yml", base_path="/healthcheck",strict_validation=True, validate_responses=True)
 logger = logging.getLogger('basicLogger')
 
 
