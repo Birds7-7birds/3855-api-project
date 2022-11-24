@@ -4,7 +4,9 @@ services:
     build: ../Receiver/
     restart: always
     ports:
-      - 8080:8080
+      - "8080"
+    networks:
+      - "api.network"
     environment:
       KAFKA_DNS: ec2-52-12-113-48.us-west-2.compute.amazonaws.com
       TARGET_ENV: test
@@ -16,7 +18,9 @@ services:
     build: ../storage/
     restart: always
     ports:
-      - 8090:8090
+      - "8090"
+    networks:
+      - "api.network"
     environment:
       KAFKA_DNS: ec2-52-12-113-48.us-west-2.compute.amazonaws.com
       TARGET_ENV: test
@@ -30,10 +34,12 @@ services:
     build: ../processing_service/
     restart: always
     ports:
-      - 8100:8100
+      - "8100"
+    networks:
+      - "api.network"
     environment:
       STORAGE_HOSTNAME: storage
-      STORAGE_PORT: 8090
+      # STORAGE_PORT: 8090
       TARGET_ENV: test
     volumes:
       - ./config/processing_service:/config
@@ -44,7 +50,9 @@ services:
     build: ../audit/
     restart: always
     ports:
-      - 8110:8110
+      - "8110"
+    networks:
+      - "api.network"
     environment:
       KAFKA_DNS: ec2-52-12-113-48.us-west-2.compute.amazonaws.com
       TARGET_ENV: test
@@ -56,12 +64,33 @@ services:
     build: ../Sample_Code/
     # image: dashboard
     ports:
-      - "3000:3000"
+      - "3000"
+    networks:
+      - "api.network"
     depends_on:
       - "processing_service"
       - "audit"
     environment:
       HOST_DNS: ec2-52-12-113-48.us-west-2.compute.amazonaws.com
 
+  nginx:
+    image: nginx:latest
+    # Connects the conf file of the container to the conf file in our folder
+    volumes:
+    - ./templates/nginx.conf.templates:/etc/nginx/nginx.conf:ro
+    # It will start up the nginx only when all api containers have started
+    depends_on:
+      - "receiver"
+      - "storage"
+      - "processing"
+      - "audit_log"
+      - "dashboard-ui"
+    # Connects the port 80 of the nginx container to localhost:80 or localhost
+    ports:
+      - "80:80"
+    networks:
+      - "api.network"
+    environment:
+      NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx/
 volumes:
   processing-db:

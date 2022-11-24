@@ -210,7 +210,7 @@ while curr_retry < app_config["events"]["max_retry"]:
         time.sleep(app_config["events"]["sleep"])
     curr_retry += 1
 app = connexion.FlaskApp(__name__, specification_dir='')
-app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
+app.add_api("openapi.yml", base_path="/storage", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":
     t1 = Thread(target=process_messages)
