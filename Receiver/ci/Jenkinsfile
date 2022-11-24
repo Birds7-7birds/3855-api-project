@@ -1,2 +1,2 @@
 @library('xav-python-lib@master')
-python_build("Receiver", "receiver", "receiverapp")
+python_build("Receiver")
