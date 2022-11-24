@@ -1,2 +1,2 @@
-@Library('xav-python-lib@master') _
+@Library('xav-python-lib@main') _
 python_build("Receiver")
