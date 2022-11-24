@@ -69,7 +69,9 @@ def postAuction(index):
     logger.error("Could not find BP at index %d" % index)
     return { "message": "Not Found"}, 404
 
-
+def healthcheck():
+    return 200
+    
 def bidAuction(index):
     """ Get auction History """
     hostname = "%s:%d" % (environ["KAFKA_DNS"],

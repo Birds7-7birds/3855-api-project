@@ -14,6 +14,14 @@ tags:
   - name: buyer
     description: this is a buyer
 paths:
+  /healthcheck:
+    get:
+      summary: bid on an aution item
+      operationId: app.healthcheck
+      description: bid on an aution item in system
+      responses:
+        '200':
+          description: 'healthcheck'
   /listItem:
     post:
       tags: 

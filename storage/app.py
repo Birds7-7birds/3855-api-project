@@ -19,6 +19,9 @@ from os import environ
 
 import os
 
+def healthcheck():
+    return 200
+
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
     print("In Test Environment")
     app_conf_file = "/config/app_conf.yml"
@@ -157,7 +160,6 @@ postAuctionClass.date_created < end_timestamp_datetime))
     logger.info("Query for new item postings after %s returns %d results" %
         (timestamp, len(results_list)))
     return results_list, 200
-
 def process_messages():
     """ Process event messages """
     # logger.debug(f'{app_config}')

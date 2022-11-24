@@ -15,6 +15,9 @@ from os import environ
 
 import os
 
+def healthcheck():
+    return 200
+    
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
     print("In Test Environment")
     app_conf_file = "/config/app_conf.yml"

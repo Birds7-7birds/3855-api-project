@@ -16,6 +16,14 @@ tags:
 
 
 paths:
+  /healthcheck:
+    get:
+      summary: bid on an aution item
+      operationId: app.healthcheck
+      description: bid on an aution item in system
+      responses:
+        '200':
+          description: 'healthcheck'
   /getbids:
     get:
       summary: gets new bids
