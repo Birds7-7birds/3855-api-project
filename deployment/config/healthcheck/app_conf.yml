@@ -1,0 +1,8 @@
+version: 1
+scheduler:
+  period_sec: 20
+  health:
+    url: /healthcheck
+
+  
+  
