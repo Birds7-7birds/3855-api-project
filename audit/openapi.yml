@@ -9,6 +9,14 @@ info:
   contact:
     email: real@email.com
 paths:
+  /healthcheck:
+    get:
+      summary: bid on an aution item
+      operationId: app.healthcheck
+      description: bid on an aution item in system
+      responses:
+        '200':
+          description: 'healthcheck'
   /listItem:
     get:
       summary: adds an auctions item

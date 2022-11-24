@@ -6,6 +6,15 @@ info:
   contact:
     email: no@email.given
 paths:
+  /healthcheck:
+    get:
+      summary: bid on an aution item
+      operationId: app.healthcheck
+      description: bid on an aution item in system
+      responses:
+        '200':
+          description: 'healthcheck'
+
   /stats:
     get:
       summary: Gets the event stats
