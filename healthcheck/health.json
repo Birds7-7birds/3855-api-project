@@ -1,0 +1,9 @@
+[
+    {
+        "last_updated": "2022-11-24T10:28:42Z",
+        "receiver": 200,
+        "audit": 200,
+        "processing": 200,
+        "storage": 200
+    }
+]

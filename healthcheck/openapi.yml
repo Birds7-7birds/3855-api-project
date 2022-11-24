@@ -1,0 +1,54 @@
+openapi: 3.0.0
+info:
+  description: This API provides event stats
+  version: "1.0.0"
+  title: Stats API
+  contact:
+    email: no@email.given
+paths:
+  /health:
+    get:
+      summary: Gets the event stats
+      operationId: app.get_stats
+      description: Gets auction statistics
+      responses:
+        '200':
+          description: Successfully returned a list of backend HealthStats
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/HealthStats'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    HealthStats:
+      required:
+      - last_updated
+      - receiver
+      - processing
+      - storage
+      - audit
+      properties:
+        receiver:
+          type: string
+          example: 500000
+        processing:
+          type: string
+          example: 200
+        storage:
+          type: string
+          example: 180
+        audit:
+          type: string
+          example: 500000
+      type: object
