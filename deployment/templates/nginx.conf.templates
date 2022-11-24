@@ -40,5 +40,10 @@ http {
         # resolves the IP of audit_log using Docker internal DNS
         proxy_pass http://audit:8110;
     }
+        location /healthcheck {
+        # resolves the IP of audit_log using Docker internal DNS
+        proxy_pass http://healthcheck:8120;
+    }
+
     }
 }
