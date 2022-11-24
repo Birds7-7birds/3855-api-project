@@ -71,7 +71,6 @@ def postAuction(body):
             "payload": body }
     msg_str = json.dumps(msg)
     producer.produce(msg_str.encode('utf-8'))
-    # logger.info('Returned postAuction event response(Id: ' + trace + ') with status ' + str(x.status_code))
     logger.info('Returned postAuction event response(Id: ' + trace + ') with status 201 i hope')
 
     return "done  👍 ", 201
