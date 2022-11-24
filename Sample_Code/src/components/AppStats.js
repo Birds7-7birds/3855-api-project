@@ -9,7 +9,7 @@ export default function AppStats() {
     const [index, setIndex] = useState(null);
 	const getStats = () => {
 	// localhost tester
-        fetch(`http://${process.env.REACT_APP_API_URL}:processing/stats`)
+        fetch(`http://${process.env.REACT_APP_API_URL}/processing/stats`)
             .then(res => res.json())
             .then((result)=>{
 				console.log("Received Stats")
