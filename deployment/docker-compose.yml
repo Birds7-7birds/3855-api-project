@@ -38,7 +38,7 @@ services:
     networks:
       - "api.network"
     environment:
-      STORAGE_HOSTNAME: storage
+      STORAGE_HOSTNAME: ec2-52-12-113-48.us-west-2.compute.amazonaws.com
       # STORAGE_PORT: 8090
       TARGET_ENV: test
     volumes:
