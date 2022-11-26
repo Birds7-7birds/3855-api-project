@@ -62,7 +62,6 @@ def check_health():
 
     for health_check in health_list:
         try:
-# requests.get("http://" + environ["KAFKA_DNS"] +"/receiver" +"/healthcheck", timeout=app_config['scheduler']['timeout'])
             requests.get("http://" + environ["KAFKA_DNS"] + health_check["url"], timeout=timeout)
             health[health_check["service"]] = "Running"
         except Exception as e:

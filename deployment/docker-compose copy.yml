@@ -1,14 +1,14 @@
 version: '3'
 services:
   receiver:
-    image: hbibroida/receiver
+    build: ../Receiver/
     restart: always
     ports:
       - "8080"
     networks:
       - "api.network"
     environment:
-      KAFKA_DNS: ec2-52-40-108-110.us-west-2.compute.amazonaws.com
+      KAFKA_DNS: ec2-52-12-113-48.us-west-2.compute.amazonaws.com
       TARGET_ENV: test
     volumes:
       - ./config/Receiver:/config
@@ -23,20 +23,20 @@ services:
     networks:
       - "api.network"
     environment:
-      KAFKA_DNS: ec2-52-40-108-110.us-west-2.compute.amazonaws.com
+      KAFKA_DNS: ec2-52-12-113-48.us-west-2.compute.amazonaws.com
     volumes:
       - ./config/healthcheck:/config
       - ./info/logs:/logs
 
   storage:
-    image: hbibroida/storage
+    build: ../storage/
     restart: always
     ports:
       - "8090"
     networks:
       - "api.network"
     environment:
-      KAFKA_DNS: ec2-52-40-108-110.us-west-2.compute.amazonaws.com
+      KAFKA_DNS: ec2-52-12-113-48.us-west-2.compute.amazonaws.com
       TARGET_ENV: test
     volumes:
       - ./config/storage:/config
@@ -45,14 +45,14 @@ services:
   processing_service:
     depends_on: 
       - storage
-    image: hbibroida/processing_service
+    build: ../processing_service/
     restart: always
     ports:
       - "8100"
     networks:
       - "api.network"
     environment:
-      STORAGE_HOSTNAME: ec2-52-40-108-110.us-west-2.compute.amazonaws.com
+      STORAGE_HOSTNAME: ec2-52-12-113-48.us-west-2.compute.amazonaws.com
       # STORAGE_PORT: 8090
       TARGET_ENV: test
     volumes:
@@ -61,14 +61,14 @@ services:
       - processing-db:/data
 
   audit:
-    image: hbibroida/audit
+    build: ../audit/
     restart: always
     ports:
       - "8110"
     networks:
       - "api.network"
     environment:
-      KAFKA_DNS: ec2-52-40-108-110.us-west-2.compute.amazonaws.com
+      KAFKA_DNS: ec2-52-12-113-48.us-west-2.compute.amazonaws.com
       TARGET_ENV: test
     volumes:
       - ./config/audit:/config
@@ -85,7 +85,7 @@ services:
       - "processing_service"
       - "audit"
     environment:
-      HOST_DNS: ec2-52-40-108-110.us-west-2.compute.amazonaws.com
+      HOST_DNS: ec2-52-12-113-48.us-west-2.compute.amazonaws.com
 
   nginx:
     image: nginx:latest
