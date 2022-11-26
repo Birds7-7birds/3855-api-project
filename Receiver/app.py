@@ -1,6 +1,4 @@
 import os
-import connexion
-from connexion import NoContent
 import logging
 import logging.config
 import yaml
@@ -8,10 +6,11 @@ import uuid
 import json
 import datetime
 import time
+import connexion
+from connexion import NoContent
 import swagger_ui_bundle
 from pykafka import KafkaClient
 
-import os
 
 def healthcheck():
     return 200
