@@ -25,23 +25,13 @@ def init_scheduler():
                     seconds=app_config['scheduler']['period_sec'])
     sched.start()
 
-
-EVENT_FILE = "health.json"
-MAX_EVENTS=1
+EVENT_FILE = app_config["files"]["event_file"]
+MAX_EVENTS=app_config["files"]["max_events"]
 
 data = []
 
 if (not (os.path.isfile(EVENT_FILE))):
     with open(EVENT_FILE, mode='a'): pass
-
-
-def make_json_keep_10(post_info):
-    data.insert(0, post_info)
-    while len(data) > MAX_EVENTS:
-        data.pop()
-    with open(EVENT_FILE,"w") as f:
-        f.write(json.dumps(data, indent=4))
-
 
 def get_stats():
     with open(EVENT_FILE,"r") as f:
@@ -56,50 +46,37 @@ def get_stats():
         logger.info("The request has been completed.")
 
     return result, 200
-    # receiver_health = requests.get(app_config["eventstore"]["url"] + app_config["scheduler"]["getBids"]["url"] + '?timestamp=' + latestime, headers={
-
 
 def check_health():
-    #Gets new blood pressure readings after the timestamp 
-    receiver = requests.get("http://" + environ["KAFKA_DNS"] +"/receiver" +app_config['scheduler']['health']['url'], timeout=app_config['scheduler']['timeout'])
-    audit = requests.get("http://" +environ["KAFKA_DNS"]+"/audit_log" + app_config['scheduler']['health']['url'], timeout=app_config['scheduler']['timeout'])
-    processing_service = requests.get("http://" +environ["KAFKA_DNS"] +"/processing" + app_config['scheduler']['health']['url'], timeout=app_config['scheduler']['timeout'])
-    storage = requests.get("http://" +environ["KAFKA_DNS"] +"/storage" + app_config['scheduler']['health']['url'], timeout=app_config['scheduler']['timeout'])
+    curr_time = datetime.datetime.now()
+    curr_time_str = curr_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+    health = {}
 
-    logger.info(f"receiver returned {receiver.status_code}.")
-    logger.info(f"audit returned {audit.status_code}.")
-    logger.info(f"processing_service returned {processing_service.status_code}.")
-    logger.info(f"storage returned {storage.status_code}.")
-    current_datetime = datetime.datetime.now()
-    last_updated = current_datetime.strftime("%Y-%m-%dT%H:%M:%SZ")
-    if receiver.status_code != 200:
-        receiver.status_code = "Down"
-    else:
-        receiver.status_code = "Running"
-    if audit.status_code != 200:
-        audit.status_code = "Down"
-    else:
-        audit.status_code = "Running"
-    if processing_service.status_code != 200:
-        processing_service.status_code = "Down"
-    else:
-        processing_service.status_code = "Running"
-    if storage.status_code != 200:
-        storage.status_code = "Down"
-    else:
-        storage.status_code = "Running"
-    item_info = {
-        "last_updated": last_updated,
-        "receiver": receiver.status_code,
-        "audit": audit.status_code,
-        "processing": processing_service.status_code,
-        "storage": storage.status_code,
-        # }
-        
-    }
+    receiver_health = app_config["receiverHealth"]
+    storage_health = app_config["storageHealth"]
+    processing_health = app_config["processingHealth"]
+    audit_health = app_config["auditHealth"]
+    timeout = app_config["timeout"]
 
-    make_json_keep_10(item_info)
-    return NoContent, 201
+    health_list = [receiver_health, storage_health, processing_health, audit_health]
+
+    for health_check in health_list:
+        try:
+# requests.get("http://" + environ["KAFKA_DNS"] +"/receiver" +"/healthcheck", timeout=app_config['scheduler']['timeout'])
+            requests.get("http://" + environ["KAFKA_DNS"] + health_check["url"], timeout=timeout)
+            health[health_check["service"]] = "Running"
+        except Exception as e:
+            health[health_check["service"]] = "Down"
+
+    health["last_updated"] = curr_time_str
+
+    logger.info(f"Health Check: {health}")
+    dict_in_a_list = [health]
+    with open(EVENT_FILE, "w") as f:
+        json.dump(dict_in_a_list, f, indent=4)
+
+    return health, 200
+
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api("openapi.yml", base_path="/healthcheck",strict_validation=True, validate_responses=True)

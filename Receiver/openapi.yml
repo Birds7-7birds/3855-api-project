@@ -27,7 +27,7 @@ paths:
       tags: 
         - seller
       summary: adds an auctions item
-      operationId: app.postAuction
+      operationId: app.post_auction
       description: Adds an auctions item to the system
       responses:
         '201':
@@ -45,7 +45,7 @@ paths:
       tags:
         - buyer
       summary: bid on an aution item
-      operationId: app.bidAuction
+      operationId: app.bid_auction
       description: bid on an aution item in system
       responses:
         '201':

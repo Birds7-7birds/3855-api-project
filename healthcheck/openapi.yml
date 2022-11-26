@@ -41,14 +41,14 @@ components:
       properties:
         receiver:
           type: string
-          example: 500000
+          example: "500000"
         processing:
           type: string
-          example: 200
+          example: "200"
         storage:
           type: string
-          example: 180
+          example: "180"
         audit:
           type: string
-          example: 500000
+          example: "500000"
       type: object
