@@ -1,16 +1,14 @@
-
-import swagger_ui_bundle
-import connexion
+import os
 import logging
 import logging.config
-import yaml
 import json
-from pykafka import KafkaClient
 import datetime
-from connexion import NoContent
+import yaml
 from flask_cors import CORS, cross_origin
-from os import environ
-import os
+import connexion
+from connexion import NoContent
+import swagger_ui_bundle
+from pykafka import KafkaClient
 
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
     print("In Test Environment")
@@ -42,7 +40,7 @@ logger.info("Log Conf File: %s" % log_conf_file)
 
 def postAuction(index):
     """ Get auction History """
-    hostname = "%s:%d" % (environ["KAFKA_DNS"],
+    hostname = "%s:%d" % (os.environ["KAFKA_DNS"],
     app_config["events"]["port"])
     client = KafkaClient(hosts=hostname)
     topic = client.topics[str.encode(app_config["events"]["topic"])]
@@ -74,7 +72,7 @@ def healthcheck():
     
 def bidAuction(index):
     """ Get auction History """
-    hostname = "%s:%d" % (environ["KAFKA_DNS"],
+    hostname = "%s:%d" % (os.environ["KAFKA_DNS"],
     app_config["events"]["port"])
     client = KafkaClient(hosts=hostname)
     topic = client.topics[str.encode(app_config["events"]["topic"])]

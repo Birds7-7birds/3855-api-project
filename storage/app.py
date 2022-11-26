@@ -1,6 +1,4 @@
-import connexion
-from connexion import NoContent
-import yaml
+import os
 import logging
 import logging.config
 from sqlalchemy import create_engine 
@@ -12,12 +10,12 @@ from bid_Auction import bidAuctionClass
 import datetime
 import json
 import time
+import yaml
+import connexion
+from connexion import NoContent
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
 from threading import Thread 
-from os import environ
-
-import os
 
 def healthcheck():
     return 200
@@ -49,14 +47,14 @@ logger.info("Log Conf File: %s" % log_conf_file)
 #     log_config = yaml.safe_load(f.read())
 #     logging.config.dictConfig(log_config)
 
-DB_ENGINE = create_engine(f'mysql+pymysql://{app_config["datastore"]["user"]}:{app_config["datastore"]["password"]}@{environ["KAFKA_DNS"]}:{app_config["datastore"]["port"]}/{app_config["datastore"]["db"]}')
+DB_ENGINE = create_engine(f'mysql+pymysql://{app_config["datastore"]["user"]}:{app_config["datastore"]["password"]}@{os.environ["KAFKA_DNS"]}:{app_config["datastore"]["port"]}/{app_config["datastore"]["db"]}')
 Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
 
 def postAuction(body):
     """ Receives a auction post reading """
     trace = body['traceId']
-    logging.info(f'connecting to DB. Hostname:{environ["KAFKA_DNS"]} on port: {app_config["datastore"]["port"]}')
+    logging.info(f'connecting to DB. Hostname:{os.environ["KAFKA_DNS"]} on port: {app_config["datastore"]["port"]}')
     logging.debug("Received event postAuction request with a trace id of " + trace)
 
     session = DB_SESSION()
@@ -74,7 +72,7 @@ def postAuction(body):
     session.commit()
     session.close()
     logger.debug('Received postAuction event (Id: ' + trace + ')')
-    logger.info(f'connecting to DB. Hostname:{environ["KAFKA_DNS"]} on port: {app_config["datastore"]["port"]}')
+    logger.info(f'connecting to DB. Hostname:{os.environ["KAFKA_DNS"]} on port: {app_config["datastore"]["port"]}')
 
 
     return NoContent, 201
@@ -86,7 +84,7 @@ def bidAuction(body):
     session = DB_SESSION()
     trace = body['traceId']
     logging.debug("Received event bidAuction request with a trace id of " + trace)
-    logging.info(f'connecting to DB. Hostname:{environ["KAFKA_DNS"]} on port: {app_config["datastore"]["port"]}')
+    logging.info(f'connecting to DB. Hostname:{os.environ["KAFKA_DNS"]} on port: {app_config["datastore"]["port"]}')
 
     bid = bidAuctionClass(body['traceId'],
                    body['itemID'],
@@ -100,7 +98,7 @@ def bidAuction(body):
 
     session.commit()
     session.close()
-    logger.info(f'connecting to DB. Hostname:{environ["KAFKA_DNS"]} on port: {app_config["datastore"]["port"]}')
+    logger.info(f'connecting to DB. Hostname:{os.environ["KAFKA_DNS"]} on port: {app_config["datastore"]["port"]}')
 
     logger.debug('Received bidAuction event (Id: ' + trace + ')')
 
@@ -162,20 +160,7 @@ postAuctionClass.date_created < end_timestamp_datetime))
     return results_list, 200
 def process_messages():
     """ Process event messages """
-    # logger.debug(f'{app_config}')
-    # hostname = f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}'
 
-
-    # curr_retry = 0
-    # while curr_retry < app_config["events"]["max_retry"]:
-    #     try:
-    #         logger.info(f"Trying to connect to Kafka, retry count: {curr_retry}")
-    #         client = KafkaClient(hosts=hostname)
-    #         topic = client.topics[str.encode(app_config["events"]["topic"])]
-    #     except:
-    #         logger.error("Connection Failed!")
-    #         time.sleep(app_config["events"]["sleep"])
-    #     curr_retry += 1
     consumer = topic.get_simple_consumer(consumer_group=b'event_group',
                                         reset_offset_on_start=False,
                                         auto_offset_reset=OffsetType.LATEST)
@@ -198,7 +183,7 @@ def process_messages():
 
 logger = logging.getLogger('basicLogger')
 
-hostname = f'{environ["KAFKA_DNS"]}:{app_config["events"]["port"]}'
+hostname = f'{os.environ["KAFKA_DNS"]}:{app_config["events"]["port"]}'
 curr_retry = 0
 while curr_retry < app_config["events"]["max_retry"]:
     try:

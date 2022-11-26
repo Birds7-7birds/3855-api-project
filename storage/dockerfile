@@ -1,23 +1,5 @@
-# FROM python
 
-# ENV FILESYSTEM_ROOT="/app"
-# # ENV HOSTNAME = "ec2-34-219-221-192.us-west-2.compute.amazonaws.com"
-
-# WORKDIR $FILESYSTEM_ROOT
-
-
-# COPY requirements.txt requirements.txt
-# RUN pip3 install -r requirements.txt
-
-# COPY app.py ./
-
-# # CMD ["flask","run"]
-# CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
-
-
-# # f'{environ["FILESYSTEM_PORT"]}'
-# # environ["FILESYSTEM_ROOT"]
-FROM ubuntu
+FROM ubuntu:20.04
 LABEL maintainer="xelchantiry@my.bcit.ca"
 
 ENV FILESYSTEM_ROOT="/app"

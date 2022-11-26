@@ -1,11 +1,11 @@
 import os
 import logging
 import logging.config
-import yaml
 import uuid
 import json
 import datetime
 import time
+import yaml
 import connexion
 from connexion import NoContent
 import swagger_ui_bundle
