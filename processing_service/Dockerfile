@@ -2,7 +2,6 @@ FROM ubuntu:20.04
 LABEL maintainer="xelchantiry@my.bcit.ca"
 
 ENV FILESYSTEM_ROOT="/app"
-
 WORKDIR $FILESYSTEM_ROOT
 
 RUN apt-get update -y && \

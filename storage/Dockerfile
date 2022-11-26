@@ -3,7 +3,6 @@ FROM ubuntu:20.04
 LABEL maintainer="xelchantiry@my.bcit.ca"
 
 ENV FILESYSTEM_ROOT="/app"
-# ENV HOSTNAME = "ec2-54-200-72-83.us-west-2.compute.amazonaws.com"
 
 WORKDIR $FILESYSTEM_ROOT
 
