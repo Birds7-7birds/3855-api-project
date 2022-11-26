@@ -1,6 +1,25 @@
 version: 1
 scheduler:
   period_sec: 20
-  timeout: 5
   health:
     url: /health
+receiverHealth:
+  service: "receiver"
+  url: "/receiver"
+
+storageHealth:
+  service: "storage"
+  url: "/storage"
+
+processingHealth:
+  service: "processing"
+  url: "/processing"
+
+auditHealth:
+  service: "audit"
+  url: "/audit_log"
+files:
+  max_events: 1
+  event_file: health.json
+
+timeout: 5
