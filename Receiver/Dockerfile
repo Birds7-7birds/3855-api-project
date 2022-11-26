@@ -6,9 +6,8 @@ ENV HOSTNAME = "ec2-54-200-72-83.us-west-2.compute.amazonaws.com"
 
 WORKDIR $FILESYSTEM_ROOT
 
-RUN apt clean && \ 
-apt-get update -y && \
-apt-get install -y python3 python3-pip
+RUN apt-get update -y &&
+RUN apt-get install -y python3 python3-pip
 # We copy just the requirements.txt first to leverage Docker cache
 COPY ./requirements.txt /app/requirements.txt
 WORKDIR /app
