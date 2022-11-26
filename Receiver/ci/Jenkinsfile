@@ -1,2 +1,2 @@
 @Library('xav-python-lib@main') _
-python_build("storage","storage", "storageapp")
+python_build("Receiver","receiver", "receiverapp")
