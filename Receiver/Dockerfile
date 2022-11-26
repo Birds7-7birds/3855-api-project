@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:latest
 LABEL maintainer="xelchantiry@my.bcit.ca"
 
 ENV FILESYSTEM_ROOT="/app"
