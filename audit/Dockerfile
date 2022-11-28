@@ -5,7 +5,7 @@ ENV FILESYSTEM_ROOT="/app"
 
 WORKDIR $FILESYSTEM_ROOT
 
-RUN apt-get update -y && 
+RUN apt-get update -y
 RUN apt-get install -y python3 
 RUN apt-get install python3-pip
 # We copy just the requirements.txt first to leverage Docker cache
