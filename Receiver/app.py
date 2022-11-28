@@ -59,8 +59,8 @@ while CURR_RETRY < app_config["events"]["max_retry"]:
 def post_auction(body):
     trace = str(uuid.uuid4())
     body["traceId"] = trace
-    logging.info("Received event postAuction request with a trace id of " + trace)
-    logging.info("i am a new thing")
+    # logging.info("Received event postAuction request with a trace id of " + trace)
+    logger.info("i am a new thing")
     msg = { "type": "postAuction",
             "datetime" :
                 datetime.datetime.now().strftime(
