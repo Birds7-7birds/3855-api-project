@@ -3,6 +3,13 @@
 This is a proof-of-concept basic auction site.
 dependencies: docker
 
+This project contains the following services:
+- Receiver: validate and forward incoming requests to the processing node
+- Storage: save needed data to database
+- Processing: process incoming requests and send what is needed to the storage node
+- Audit: centralized logging system
+- Health Check: verify all nodes are up and running correctly 
+
 ## Start Project
 To start this project, you must download it.
 1. For development, you want to use the [docker compose copy.](https://github.com/Birds7-7birds/3855-api-project/blob/master/deployment/docker-compose%20copy.yml) as it points to the docker files for each microservice rather than docker images; otherwise, use the normal docker compose.
