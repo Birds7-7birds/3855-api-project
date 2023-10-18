@@ -4,7 +4,7 @@ BID_URL:
 AUCTION_URL:
   url: http://localhost:8090/listItem
 events:
-  hostname: ec2-54-200-72-83.us-west-2.compute.amazonaws.com
+  hostname: ${KAKFKA_DNS}
   port: 9092
   topic: events
   max_retry: 5
