@@ -1,7 +1,7 @@
 # Aucition site
 
 This is a proof-of-concept basic auction site.
-dependacies: docker
+dependencies: docker
 
 ## Start Project
 To start this project, you must download it.
