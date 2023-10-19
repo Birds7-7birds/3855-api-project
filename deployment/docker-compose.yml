@@ -1,14 +1,14 @@
 version: '3'
 services:
   receiver:
-    image: hbibroida/receiver:receiverapp
+    image: ${YOUR_DOCKERHUB}/receiver:receiverapp
     restart: always
     ports:
       - "8080"
     networks:
       - "api.network"
     environment:
-      KAFKA_DNS: ec2-52-40-108-110.us-west-2.compute.amazonaws.com
+      KAFKA_DNS: ${KAFKA_DNS}
       TARGET_ENV: test
     volumes:
       - ./config/Receiver:/config
@@ -23,20 +23,20 @@ services:
     networks:
       - "api.network"
     environment:
-      KAFKA_DNS: ec2-52-40-108-110.us-west-2.compute.amazonaws.com
+      KAFKA_DNS: ${KAFKA_DNS}
     volumes:
       - ./config/healthcheck:/config
       - ./info/logs:/logs
 
   storage:
-    image: hbibroida/storage:storageapp
+    image: ${YOUR_DOCKERHUB}/storage:storageapp
     restart: always
     ports:
       - "8090"
     networks:
       - "api.network"
     environment:
-      KAFKA_DNS: ec2-52-40-108-110.us-west-2.compute.amazonaws.com
+      KAFKA_DNS: ${KAFKA_DNS}
       TARGET_ENV: test
     volumes:
       - ./config/storage:/config
@@ -45,14 +45,14 @@ services:
   processing_service:
     depends_on: 
       - storage
-    image: hbibroida/processing_service:processing_serviceapp
+    image: ${YOUR_DOCKERHUB}/processing_service:processing_serviceapp
     restart: always
     ports:
       - "8100"
     networks:
       - "api.network"
     environment:
-      STORAGE_HOSTNAME: ec2-52-40-108-110.us-west-2.compute.amazonaws.com
+      STORAGE_HOSTNAME: ${KAFKA_DNS}
       # STORAGE_PORT: 8090
       TARGET_ENV: test
     volumes:
@@ -61,21 +61,21 @@ services:
       - processing-db:/data
 
   audit:
-    image: hbibroida/audit:auditapp
+    image: ${YOUR_DOCKERHUB}/audit:auditapp
     restart: always
     ports:
       - "8110"
     networks:
       - "api.network"
     environment:
-      KAFKA_DNS: ec2-52-40-108-110.us-west-2.compute.amazonaws.com
+      KAFKA_DNS: ${KAFKA_DNS}
       TARGET_ENV: test
     volumes:
       - ./config/audit:/config
       - ./info/logs:/logs
 
   dashboard:
-    build: ../Sample_Code/
+    build: ../dashboard/
     # image: dashboard
     ports:
       - "3000"
@@ -85,7 +85,7 @@ services:
       - "processing_service"
       - "audit"
     environment:
-      HOST_DNS: ec2-52-40-108-110.us-west-2.compute.amazonaws.com
+      HOST_DNS: ${KAFKA_DNS}
 
   nginx:
     image: nginx:latest
