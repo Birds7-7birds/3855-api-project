@@ -3,7 +3,7 @@
 
 ## Introduction
 Post and bid on items while having low latency and high availability. Built using Python, Flask, OpenAPI, SQLite, Kafka, and React
-
+![Alt text](./Images/site.png)
 ## Services
 - Dashboard: React website that lets you see the number of items and bids as well as the highest value bid
 - Receiver: validate and forward incoming requests to the processing node
@@ -27,6 +27,7 @@ To start this project, you must download it.
 5. The dashboard should be visible on [http://localhost](http://localhost)
 
 ## Troubleshooting
+![Alt text](./Images/fail.JPG)
 - If this does not work, chances are the app_conf.yml did not pick up the environment variable for Kafka DNS. Try hardcoding it and rebuilding images with `docker compose up -f docker-compose_kafka.yml --Build`
 
 ## Interacting with the Microservices
