@@ -29,7 +29,7 @@ To start this project, you must download it.
 ## Troubleshooting
 ![Alt text](./Images/fail.JPG)
 - If this does not work, chances are the app_conf.yml did not pick up the environment variable for Kafka DNS. Try hardcoding it and rebuilding images with `docker compose up -f docker-compose_kafka.yml --Build`
-
+- If this is not working, focus on getting each docker service to stay on, then, one at a time connect them to the healthcheck. If the healthcheck cannot see them, there is a network issue. Then work on connecting them to Kafka.
 ## Interacting with the Microservices
 The services are setup with API end points, to place a bit or list an item, you need to make post requests to the receiver endpoints.. The two main endpoints are:
 `/listItem` which requires a JSON body that looks like so
