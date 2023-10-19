@@ -1,0 +1,14 @@
+pipeline {
+    agent any
+    stages {
+        stage('deploy') {
+            steps {
+                sshagent(credentials : ['SSH_KEY_NAME']) {
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@${IP_HOSTING_SERVICES} 'cd ~/mystuff/3855-api-project/deployment; docker-compose down; docker image rm ${dockerRepoName}/receiver:receiverapp; docker image rm ${dockerRepoName}/storage:storageapp; docker image rm ${dockerRepoName}/processing_service:processing_serviceapp; docker image rm ${dockerRepoName}/audit:auditapp'"
+                    // sh "ssh -o StrictHostKeyChecking=no ubuntu@${IP_HOSTING_SERVICES} 'docker pull ${dockerRepoName}/receiver:receiverapp; docker pull ${dockerRepoName}/storage:storageapp; docker pull ${dockerRepoName}/audit:auditapp; docker pull ${dockerRepoName}/processing_service:processing_serviceapp'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@${IP_HOSTING_SERVICES} 'cd ~/mystuff/3855-api-project/deployment; docker-compose up -d'"
+                }
+            }
+        }
+    }
+}

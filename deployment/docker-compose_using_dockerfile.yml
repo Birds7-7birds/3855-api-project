@@ -1,7 +1,7 @@
 version: '3'
 services:
   receiver:
-    image: ${YOUR_DOCKERHUB}/receiver:receiverapp
+    build: ../Receiver/
     restart: always
     ports:
       - "8080"
@@ -29,7 +29,7 @@ services:
       - ./info/logs:/logs
 
   storage:
-    image: ${YOUR_DOCKERHUB}/storage:storageapp
+    build: ../storage/
     restart: always
     ports:
       - "8090"
@@ -45,7 +45,7 @@ services:
   processing_service:
     depends_on: 
       - storage
-    image: ${YOUR_DOCKERHUB}/processing_service:processing_serviceapp
+    build: ../processing_service/
     restart: always
     ports:
       - "8100"
@@ -61,7 +61,7 @@ services:
       - processing-db:/data
 
   audit:
-    image: ${YOUR_DOCKERHUB}/audit:auditapp
+    build: ../audit/
     restart: always
     ports:
       - "8110"
