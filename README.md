@@ -18,17 +18,17 @@ To start this project, you must download it.
 
 2. Run `docker compose up -f [docker-compose_kafka.yml](https://github.com/XavierElChantiry/Auction-a-Bidding-and-Listing-Solution/blob/master/deployment/docker-compose_kafka.yml)` to start a Kafka cluster.
 
-3. Set an environment variable called `KAFKA_DNS` to the IP of the Kafka cluster. if you ran it locally, localhost should work. If you are using powershell use: `New-Item -Path Env:\KAFKA_DNS -Value 'IP_OF_CLUSTER'`
+3. Set an environment variable called `KAFKA_DNS` to the IP of the Kafka cluster. If you run it locally, localhost should work. If you are using PowerShell, use: `New-Item -Path Env:\KAFKA_DNS -Value 'IP_OF_CLUSTER'`
 
 4. For development, you want to use `docker compose up -f [docker-compose_using_dockerfile.yml](https://github.com/XavierElChantiry/Auction-a-Bidding-and-Listing-Solution/blob/master/deployment/docker-compose_using_dockerfile)` as it points to the docker files for each microservice rather than docker images; otherwise, if you have pushed images of these services to dockerhub you can use `docker compose up`.
 
 5. The dashboard should be visible on `[http://localhost:3000](http://localhost:3000)`
 
 ## Troubleshooting
-- If this does not work, chances are the app_conf.yml did not pick up the environment variable for Kafka DNS, try hardcoding it and rebuilding images with `docker compose up -f [docker-compose_kafka.yml](https://github.com/XavierElChantiry/Auction-a-Bidding-and-Listing-Solution/blob/master/deployment/docker-compose_kafka.yml) --Build`
+- If this does not work, chances are the app_conf.yml did not pick up the environment variable for Kafka DNS. Try hardcoding it and rebuilding images with `docker compose up -f [docker-compose_kafka.yml](https://github.com/XavierElChantiry/Auction-a-Bidding-and-Listing-Solution/blob/master/deployment/docker-compose_kafka.yml) --Build`
 
 ## Interacting with the Microservices
-The services are setup with API end points, to place a bit or list an item, you need to make post requests to the receiver enpoints. The 2 main endpoints are:
+The services are setup with API end points, to place a bit or list an item, you need to make post requests to the receiver endpoints.. The two main endpoints are:
 `/listItem` which requires a JSON body that looks like so
 ```
 {
